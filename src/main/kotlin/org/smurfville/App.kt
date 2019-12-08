@@ -13,8 +13,13 @@ fun main() {
         appSyncData = initAppSync()
     }
 
-    println("Agar tum saath ho! for $appSyncData")
-    val listenData: ListenBrainzListenList? = getListens("smurfpandey", listenAfter = appSyncData.sync_after)
+    println("Last Sync: ${appSyncData.last_sync_on}, Sync After: ${appSyncData.sync_after}, Sync Before: ${appSyncData.sync_before}")
+
+    // if first call, pass min_ts
+    // for subsequent calls, pass max_ts taken from last element of previous result
+    // if max_ts <= appSynData.sync_after. Stop
+
+    val listenData: ListenBrainzListenList? = getListens("smurfpandey")
     if(listenData == null) {
         println("Something went wrong")
         return
@@ -23,10 +28,26 @@ fun main() {
     val syncAfter = listenData.payload.listens.first().listened_at
     val syncBefore = listenData.payload.listens.last().listened_at
 
-    listenData.payload.listens.forEach {
-        println(it)
-        saveListenData(it.track_metadata.track_name, it.track_metadata.artist_name, it.track_metadata.release_name, it.listened_at)
+    var areWeDone: Boolean = false
+    run saveData@{
+        listenData.payload.listens.forEach {
+            if (it.listened_at <= appSyncData.sync_after) {
+                // we have seen this data
+                areWeDone = true
+                return@saveData
+            }
+            var releaseName = it.track_metadata.release_name
+            if (releaseName == null) {
+                releaseName = ""
+            }
+            saveListenData(it.track_metadata.track_name, it.track_metadata.artist_name, releaseName, it.listened_at)
+        }
     }
 
-    updateLastSyncTime()
+    if(areWeDone) {
+        updateLastSyncTime()
+    } else {
+        //hungry for more
+    }
+
 }

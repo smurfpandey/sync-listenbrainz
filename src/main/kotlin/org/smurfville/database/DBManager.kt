@@ -72,38 +72,36 @@ fun getSyncStatus(): AppSyncStatus? {
 
 fun updateLastSyncTime() {
     val currentTimestamp: Long = getNowInUnix()
-    updateLastSyncTime(currentTimestamp)
-}
-
-fun updateLastSyncTime(syncTime: Long) {
+    var syncAfter: Int = 0
+    var syncBefore: Int = 0
     transaction {
-        val queryResult: Query =  SyncStatus.selectAll()
-        if (queryResult.count() > 0) {
-            // update
-            SyncStatus.update ({ SyncStatus.last_sync_on.greater(0L) }) {
-                it[SyncStatus.last_sync_on] = syncTime
-            }
-        } else {
-            // insert
-            SyncStatus.insert {
-                it[last_sync_on] = syncTime
-            }
+        val maxTime = Listens.listened_at.max()
+        val minTime = Listens.listened_at.min()
+        val query: Query = Listens.slice(maxTime, minTime).selectAll()
+        if(query.count() > 0) {
+            var data = query.first()
+            syncAfter = data[maxTime] as Int
+            syncBefore = data[minTime] as Int
         }
+
+        updateSyncStatus(currentTimestamp, syncAfter.toLong(), syncBefore.toLong())
     }
 }
 
 fun updateSyncStatus(lastSyncOn: Long, syncAfter: Long, syncBefore: Long) {
     transaction {
-        val queryResult: Query =  SyncStatus.selectAll()
+        val queryResult =  AppSyncStatus.all()
         if (queryResult.count() > 0) {
             // update
-            SyncStatus.update ({ SyncStatus.last_sync_on.greater(0L) }) {
-                it[SyncStatus.last_sync_on] = lastSyncOn
-            }
+            queryResult.first().last_sync_on = lastSyncOn
+            queryResult.first().sync_after = syncAfter
+            queryResult.first().sync_before = syncBefore
         } else {
             // insert
-            SyncStatus.insert {
-                it[last_sync_on] = lastSyncOn
+            AppSyncStatus.new {
+                last_sync_on = lastSyncOn
+                sync_after = syncAfter
+                sync_before = syncBefore
             }
         }
     }

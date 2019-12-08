@@ -20,6 +20,6 @@ data class Listens(
 
 data class TrackMetadata(
     val artist_name: String,
-    val release_name: String,
+    val release_name: String?,
     val track_name: String
 )
