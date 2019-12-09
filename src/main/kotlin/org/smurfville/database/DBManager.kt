@@ -12,7 +12,7 @@ object Listens : Table() {
     val track = varchar("track_name", length = 150).index() // Column<String>
     val artist = varchar("track_artist", length = 150).index() // Column<String>
     val album = varchar("track_album", length = 150).index() // Column<String>
-    val listened_at = integer("listened_at").uniqueIndex()
+    val listened_at = integer("listened_at").index()
 }
 
 object SyncStatus : IntIdTable() {

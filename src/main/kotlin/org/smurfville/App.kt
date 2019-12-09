@@ -19,35 +19,46 @@ fun main() {
     // for subsequent calls, pass max_ts taken from last element of previous result
     // if max_ts <= appSynData.sync_after. Stop
 
-    val listenData: ListenBrainzListenList? = getListens("smurfpandey")
-    if(listenData == null) {
-        println("Something went wrong")
-        return
+    var lastSyncTime: Int = syncFromListenBrainz(appSyncData, 0)
+
+    while (lastSyncTime > 0) {
+        lastSyncTime = syncFromListenBrainz(appSyncData, lastSyncTime)
     }
 
-    val syncAfter = listenData.payload.listens.first().listened_at
-    val syncBefore = listenData.payload.listens.last().listened_at
+    updateLastSyncTime()
 
-    var areWeDone: Boolean = false
+}
+
+fun syncFromListenBrainz(appSyncData: AppSyncStatus, notListenAfter: Int): Int {
+    val listenData: ListenBrainzListenList? = getListens("smurfpandey", notListenAfter = notListenAfter)
+    if(listenData == null) {
+        println("Something went wrong")
+        return 0
+    }
+
+    if(listenData.payload.listens.isEmpty()) {
+        println("All data synced!")
+        return 0
+    }
+
+    var lastListenTime: Int = listenData.payload.listens.last().listened_at
+
     run saveData@{
         listenData.payload.listens.forEach {
             if (it.listened_at <= appSyncData.sync_after) {
                 // we have seen this data
-                areWeDone = true
+                // and we are done
+                lastListenTime = 0
                 return@saveData
             }
             var releaseName = it.track_metadata.release_name
             if (releaseName == null) {
                 releaseName = ""
             }
+            println("Saving: ${it.track_metadata.track_name} By: ${it.track_metadata.artist_name} Listened at: ${it.listened_at}")
             saveListenData(it.track_metadata.track_name, it.track_metadata.artist_name, releaseName, it.listened_at)
         }
     }
 
-    if(areWeDone) {
-        updateLastSyncTime()
-    } else {
-        //hungry for more
-    }
-
+    return lastListenTime
 }
