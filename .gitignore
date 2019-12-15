@@ -1,4 +1,5 @@
 .DS_Store
+.env
 .idea/shelf
 /android.tests.dependencies
 /confluence/target

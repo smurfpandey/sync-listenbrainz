@@ -1,10 +1,22 @@
 package org.smurfville
 
+import io.github.cdimascio.dotenv.dotenv
 import org.smurfville.database.*
 import org.smurfville.listenbrainz.*
 
 fun main() {
-    initDB()
+    val dotenv = dotenv()
+    val dbHost: String? = dotenv["MYSQL_DATABASE_HOST"]
+    val dbPort: Int? = dotenv["MYSQL_DATABASE_PORT"]?.toInt()
+    val dbName: String? = dotenv["MYSQL_DATABASE_NAME"]
+    val dbUser: String? = dotenv["MYSQL_DATABASE_USER"]
+    val dbPass: String? = dotenv["MYSQL_DATABASE_PASSWORD"]
+
+    if (dbHost == null || dbPort == null || dbName == null || dbUser == null || dbPass == null) {
+        throw Exception("Database configuration missing!")
+    }
+
+    initDB(dbHost = dbHost, dbPort = dbPort, dbName = dbName, dbUser = dbUser, dbPass = dbPass)
 
     // check last sync status
     var appSyncData = getSyncStatus()

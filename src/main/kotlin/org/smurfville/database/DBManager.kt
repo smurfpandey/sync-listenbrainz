@@ -29,8 +29,8 @@ class AppSyncStatus(id: EntityID<Int>) : IntEntity(id) {
     var sync_before  by SyncStatus.sync_before
 }
 
-fun initDB() {
-    Database.connect("jdbc:mysql://localhost:3306/music_habits", driver = "com.mysql.cj.jdbc.Driver", user = "root", password = "server@123")
+fun initDB(dbHost: String, dbPort: Int, dbName: String, dbUser: String, dbPass: String) {
+    Database.connect("jdbc:mysql://${dbHost}:${dbPort}/${dbName}", driver = "com.mysql.cj.jdbc.Driver", user = "${dbUser}", password = "${dbPass}")
 
     transaction {
         SchemaUtils.create(Listens, SyncStatus)
