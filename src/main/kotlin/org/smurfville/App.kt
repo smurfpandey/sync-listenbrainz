@@ -1,11 +1,11 @@
 package org.smurfville
 
-import io.github.cdimascio.dotenv.dotenv
+import io.github.cdimascio.dotenv.Dotenv
 import org.smurfville.database.*
 import org.smurfville.listenbrainz.*
 
 fun main() {
-    val dotenv = dotenv()
+    val dotenv = Dotenv.configure().ignoreIfMissing().load()
     val dbHost: String? = dotenv["MYSQL_DATABASE_HOST"]
     val dbPort: Int? = dotenv["MYSQL_DATABASE_PORT"]?.toInt()
     val dbName: String? = dotenv["MYSQL_DATABASE_NAME"]
