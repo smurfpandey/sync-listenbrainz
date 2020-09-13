@@ -10,7 +10,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -55,7 +55,9 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build with gradle
-        run: ./gradlew --no-daemon --info --stacktrace shadowJar
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: --info shadowJar
 
 #      - name: Build and push
 #        id: docker_build
