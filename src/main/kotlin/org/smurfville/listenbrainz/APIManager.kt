@@ -2,7 +2,6 @@ package org.smurfville.listenbrainz
 
 import com.github.kittinunf.fuel.*
 import com.github.kittinunf.fuel.jackson.responseObject
-import com.github.kittinunf.result.Result;
 
 private const val API_BASE_URL = "https://api.listenbrainz.org"
 private const val MAX_RESULT = "100"

@@ -1,7 +1,5 @@
 package org.smurfville.listenbrainz
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 data class ListenBrainzListenList(
     val payload: Payload
 )
@@ -13,7 +11,6 @@ data class Payload(
     val user_id: String
 )
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 data class Listens(
     val listened_at: Int,
     val recording_msid: String,
@@ -21,7 +18,6 @@ data class Listens(
     val user_name: String
 )
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 data class TrackMetadata(
     val artist_name: String,
     val release_name: String?,

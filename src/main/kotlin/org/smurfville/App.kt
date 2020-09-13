@@ -4,12 +4,6 @@ import io.github.cdimascio.dotenv.Dotenv
 import org.smurfville.database.*
 import org.smurfville.listenbrainz.*
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import java.io.File
-import org.smurfville.listenbrainz.*
-
 fun main() {
     val dotenv = Dotenv.configure().ignoreIfMissing().load()
     val dbHost: String? = dotenv["PGSQL_DATABASE_HOST"]
