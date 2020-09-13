@@ -61,6 +61,8 @@ jobs:
           gradle-version: 6.6
           arguments: --info shadowJar
 
+      - run: ls -lash ./build/libs/
+
 #      - name: Build and push
 #        id: docker_build
 #        uses: docker/build-push-action@v2
