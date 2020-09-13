@@ -1,4 +1,4 @@
-FROM gradle:6.6.1-jdk14 as BUILD
+FROM arm32v7/gradle:6.6.1-jdk14 as BUILD
 
 COPY . /app
 WORKDIR /app
