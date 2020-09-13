@@ -54,6 +54,7 @@ jobs:
 #          username: ${{ github.repository_owner }}
 #          password: ${{ secrets.GHCR_TOKEN }}
       - run: ls -lash
+      - run: pwd
       - name: Build with gradle
         uses: eskatos/gradle-command-action@v1
         with:
