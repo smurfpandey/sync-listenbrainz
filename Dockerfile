@@ -1,4 +1,4 @@
-FROM arm32v7/adoptopenjdk:14-jdk-hotspot as BUILD
+FROM arm32v7/gradle:6.6.1-jdk14 as BUILD
 
 COPY . /src
 WORKDIR /src
