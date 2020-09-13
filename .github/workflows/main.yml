@@ -38,7 +38,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: output
-          path: ./build/libs/sync-listenbrainz-1.0-SNAPSHOT-all.jar
+          path: |
+            ./build/libs/sync-listenbrainz-1.0-SNAPSHOT-all.jar
+            ./Dockerfile
 
   build-docker-image:
     needs: build-app
