@@ -2,6 +2,7 @@ FROM arm32v7/adoptopenjdk:14-jdk-hotspot as BUILD
 
 COPY . /src
 WORKDIR /src
+RUN chmod +x gradlew
 RUN ./gradlew --no-daemon shadowJar
 
 FROM arm32v7/adoptopenjdk:14.0.2_8-jre-hotspot
