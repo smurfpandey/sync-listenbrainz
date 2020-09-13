@@ -3,7 +3,7 @@ FROM gradle:6.6.1-jdk14 as BUILD
 COPY . /app
 WORKDIR /app
 RUN chmod +x gradlew
-RUN gradle build --no-daemon shadowJar
+RUN gradle build --no-daemon --info shadowJar
 
 FROM arm32v7/adoptopenjdk:14.0.2_8-jre-hotspot
 
