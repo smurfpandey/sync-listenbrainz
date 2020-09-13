@@ -30,7 +30,7 @@ class AppSyncStatus(id: EntityID<Int>) : IntEntity(id) {
 }
 
 fun initDB(dbHost: String, dbPort: Int, dbName: String, dbUser: String, dbPass: String) {
-    Database.connect("jdbc:mysql://${dbHost}:${dbPort}/${dbName}", driver = "com.mysql.cj.jdbc.Driver", user = "${dbUser}", password = "${dbPass}")
+    Database.connect("jdbc:postgresql://${dbHost}:${dbPort}/${dbName}", driver = "org.postgresql.Driver", user = "${dbUser}", password = "${dbPass}")
 
     transaction {
         SchemaUtils.create(Listens, SyncStatus)

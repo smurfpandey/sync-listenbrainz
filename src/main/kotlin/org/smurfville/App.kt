@@ -4,13 +4,19 @@ import io.github.cdimascio.dotenv.Dotenv
 import org.smurfville.database.*
 import org.smurfville.listenbrainz.*
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import java.io.File
+import org.smurfville.listenbrainz.*
+
 fun main() {
     val dotenv = Dotenv.configure().ignoreIfMissing().load()
-    val dbHost: String? = dotenv["MYSQL_DATABASE_HOST"]
-    val dbPort: Int? = dotenv["MYSQL_DATABASE_PORT"]?.toInt()
-    val dbName: String? = dotenv["MYSQL_DATABASE_NAME"]
-    val dbUser: String? = dotenv["MYSQL_DATABASE_USER"]
-    val dbPass: String? = dotenv["MYSQL_DATABASE_PASSWORD"]
+    val dbHost: String? = dotenv["PGSQL_DATABASE_HOST"]
+    val dbPort: Int? = dotenv["PGSQL_DATABASE_PORT"]?.toInt()
+    val dbName: String? = dotenv["PGSQL_DATABASE_NAME"]
+    val dbUser: String? = dotenv["PGSQL_DATABASE_USER"]
+    val dbPass: String? = dotenv["PGSQL_DATABASE_PASSWORD"]
 
     if (dbHost == null || dbPort == null || dbName == null || dbUser == null || dbPass == null) {
         throw Exception("Database configuration missing!")
@@ -34,6 +40,7 @@ fun main() {
     var lastSyncTime: Int = syncFromListenBrainz(appSyncData, 0)
 
     while (lastSyncTime > 0) {
+        println("Last Sync: ${lastSyncTime}")
         lastSyncTime = syncFromListenBrainz(appSyncData, lastSyncTime)
     }
 
